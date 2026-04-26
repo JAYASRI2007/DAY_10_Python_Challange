@@ -1,0 +1,116 @@
+import random
+import copy
+import math
+import numpy as np
+import pandas as pd
+
+def generate_students(n=12):
+    students = []
+    for i in range(n):
+        student = {
+            "id": i + 1,
+            "marks": random.randint(40, 100),
+            "attendance": random.randint(60, 100),
+            "scores": [random.randint(10, 25), random.randint(10, 25)]
+        }
+        students.append(student)
+    return students
+
+def apply_mutation(data, roll_number):
+    mod_val = roll_number % 3
+
+    if mod_val == 0:
+        mod_val = 1
+
+    for i in range(len(data)):
+        if i % mod_val == 0:
+            data[i]["marks"] += int(math.sqrt(data[i]["marks"]))
+            data[i]["scores"][0] += 5
+            data[i]["attendance"] += 2
+
+    return data
+
+def analyze_data(data):
+    df = pd.DataFrame(data)
+
+    marks = df["marks"].values
+
+    mean = np.mean(marks)
+    median = np.median(marks)
+    std_dev = np.std(marks)
+    normalized = (marks - np.min(marks)) / (np.max(marks) - np.min(marks))
+    df["normalized_marks"] = normalized
+
+    return df, mean, median, std_dev
+
+def manual_mean(data):
+    total = 0
+    for d in data:
+        total += d["marks"]
+    return total / len(data)
+
+def detect_drift(original_mean, modified_mean):
+    return abs(original_mean - modified_mean)
+
+def classify(drift, threshold, copy_failed):
+    if copy_failed:
+        return "Copy Failure Detected"
+    elif drift > threshold * 2:
+        return "Critical Drift"
+    elif drift > threshold:
+        return "Minor Drift"
+    else:
+        return "Stable Data"
+
+
+
+def main():
+    roll_number = 23 
+    original = generate_students()
+    shallow_copy = original.copy()
+    deep_copy = copy.deepcopy(original)
+    apply_mutation(shallow_copy, roll_number)
+    apply_mutation(deep_copy, roll_number)
+    df_original, mean_orig, median_orig, std_orig = analyze_data(original)
+    df_shallow, mean_shallow, _, std_shallow = analyze_data(shallow_copy)
+    df_deep, mean_deep, _, std_deep = analyze_data(deep_copy)
+    manual_mean_val = manual_mean(original)
+    drift_shallow = detect_drift(mean_orig, mean_shallow)
+    drift_deep = detect_drift(mean_orig, mean_deep)
+    threshold = 5
+    copy_failure = original[0]["scores"] is shallow_copy[0]["scores"]
+    result_shallow = classify(drift_shallow, threshold, copy_failure)
+    result_deep = classify(drift_deep, threshold, False)
+    print("\n--- ORIGINAL DATAFRAME ---")
+    print(df_original)
+
+    print("\n--- SHALLOW COPY DATAFRAME ---")
+    print(df_shallow)
+
+    print("\n--- DEEP COPY DATAFRAME ---")
+    print(df_deep)
+
+    print("\n--- STATISTICS ---")
+    print("Original Mean:", mean_orig)
+    print("Manual Mean (without NumPy):", manual_mean_val)
+    print("Standard Deviation:", std_orig)
+
+    print("\n--- DRIFT VALUES ---")
+    print("Shallow Drift:", drift_shallow)
+    print("Deep Drift:", drift_deep)
+
+    print("\n--- RESULT TUPLE ---")
+    print("(Mean, Drift, Std Dev):", (mean_orig, drift_shallow, std_orig))
+
+    print("\n--- FINAL CLASSIFICATION ---")
+    print("Shallow Copy:", result_shallow)
+    print("Deep Copy:", result_deep)
+
+    print("\n--- EXPLANATION ---")
+    print("Shallow copy shares nested objects like 'scores'.")
+    print("So modifying shallow copy also changes original data, causing drift.")
+    print("Deep copy creates independent objects, so original data remains unchanged.")
+
+
+if _name_ == "_main_":
+    main()
