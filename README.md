@@ -1,179 +1,37 @@
-# 📊 Day 10 Python Challenge
-
-## Data Drift Detection using Shallow Copy vs Deep Copy
-
----
-
-## 📌 Overview
-
-This project simulates a **student data analysis system** to demonstrate the difference between **Shallow Copy** and **Deep Copy** in Python.
-
-It focuses on how data mutations impact original datasets and introduces the concept of **data drift detection** using statistical analysis.
-
----
-
-## 🚀 Features
-
-* Generate random student dataset
-* Apply controlled mutations based on roll number
-* Perform statistical analysis using:
-
-  * Mean
-  * Median
-  * Standard Deviation
-* Normalize data values
-* Detect **data drift**
-* Classify system behavior:
-
-  * Stable Data
-  * Minor Drift
-  * Critical Drift
-  * Copy Failure Detected
-* Compare:
-
-  * Shallow Copy behavior
-  * Deep Copy behavior
-
----
-
-## 🛠️ Technologies Used
-
-* Python 3
-* NumPy
-* Pandas
-* Built-in modules:
-
-  * `random`
-  * `copy`
-  * `math`
-
----
-
-## 📂 Project Structure
-
-```bash
-DAY_10/
-│── day_10.py
-│── README.md
-```
-
----
-
-## 🔍 Key Concepts
-
-### 🔹 Shallow Copy
-
-* Copies only outer structure
-* Nested objects (like lists inside dictionaries) are **shared**
-* Changes affect original data
-
-### 🔹 Deep Copy
-
-* Fully independent copy
-* No shared references
-* Safe for data manipulation
-
----
-
-## ⚙️ Workflow
-
-1. Generate student dataset with:
-
-   * Marks
-   * Attendance
-   * Scores (nested list)
-
-2. Create:
-
-   * Shallow copy
-   * Deep copy
-
-3. Apply mutation:
-
-   * Modify marks using square root logic
-   * Update scores and attendance
-
-4. Analyze data:
-
-   * Convert to DataFrame
-   * Compute mean, median, standard deviation
-   * Normalize marks
-
-5. Detect drift:
-
-   * Compare original vs modified mean
-
-6. Classify results:
-
-   * Based on drift threshold and memory behavior
-
----
-
-## 📊 Sample Output (Concept)
-
-```text
---- DRIFT VALUES ---
-Shallow Drift: High
-Deep Drift: Low
-
---- FINAL CLASSIFICATION ---
-Shallow Copy: Copy Failure Detected
-Deep Copy: Stable Data
-```
-
----
-
-## ⚠️ Important Insight
-
-Shallow copy shares nested objects (like `scores`).
-So modifying shallow copy also changes original data, leading to **incorrect drift detection**.
-
-Deep copy avoids this issue by creating independent data structures.
-
----
-
-## ▶️ How to Run
-
-```bash
-py day_10.py
-```
-
-OR
-
-```bash
-python day_10.py
-```
-
----
-
-## 🎯 Learning Outcomes
-
-* Understand shallow vs deep copy deeply
-* Learn how data mutation affects analysis
-* Implement basic data science concepts:
-
-  * Mean, median, standard deviation
-  * Normalization
-* Detect and classify data drift
-
----
-
-## 💡 Real-World Applications
-
-* Data pipelines
-* Machine learning preprocessing
-* Financial data analysis
-* API data handling
-* Preventing unintended data corruption
-
----
-
-## 👩‍💻 Author
-
-**Jayasri**
-
----
-
-## ⭐ If you found this useful
-
-Give this repo a ⭐ on GitHub!
+# Day 10 — Challenges
+
+This folder contains Day 10 challenge files.
+
+## Notes
+
+* Requires Python 3.x. Use quotes around the filename if your shell requires them because of spaces.
+* Requires external libraries: `numpy` and `pandas`. Install using:
+  `pip install numpy pandas`
+* Inspect the script for usage or required inputs.
+
+## Challenge Description
+
+`student drift analyzer.py` simulates student performance data and analyzes the effect of shallow and deep copy mutations. It generates student records, applies controlled mutations based on a roll number, calculates statistical measures, detects data drift, and classifies the results. It highlights how shallow copy can unintentionally modify original data, while deep copy preserves data integrity.
+
+## Approach / Logic Used
+
+* Generate student dataset with `marks`, `attendance`, and `scores`.
+* Apply mutation based on `roll_number % 3` to selectively modify records.
+* Use both shallow copy and deep copy to compare behavior.
+* Convert data into a DataFrame and compute mean, median, standard deviation, and normalized values.
+* Compute manual mean without using NumPy for validation.
+* Detect drift as the difference between original and modified means.
+* Classify results into Stable, Minor Drift, Critical Drift, or Copy Failure.
+* Detect shallow copy issue by checking shared references in nested objects (`scores`).
+
+## Algorithm / Steps
+
+1. Generate a list of student records with random values.
+2. Create both shallow copy and deep copy of the original data.
+3. Apply mutation logic based on roll number to both copies.
+4. Convert datasets into DataFrames and calculate statistics (mean, median, standard deviation, normalization).
+5. Compute manual mean using a loop (without NumPy).
+6. Calculate drift between original and modified datasets.
+7. Detect copy failure by checking if nested objects are shared.
+8. Classify results based on drift and copy behavior.
+9. Print all datasets, statistics, drift values, and final classification.
